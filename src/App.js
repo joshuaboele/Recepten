@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteRecipe } from "./store/recipesSlice";
+import "./App.css";
+import AddRecipeForm from "./components/addRecipeForm";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const recipes = useSelector(state => state.recipes);
+    const dispatch = useDispatch();
+    const handleDeleteRecipe = id => {
+        dispatch(deleteRecipe(id));
+    };
+    return (
+        <div className="App">
+            <ul>
+                {recipes.map(({ id, name, ingredients, description }) => {
+                    return (
+                        <li key={id}>
+                            {name}
+                            <ul>
+                                {ingredients.map(ingredient => (
+                                    <li>{ingredient}</li>
+                                ))}
+                            </ul>
+                            {description}
+                            <button
+                                onClick={() => {
+                                    handleDeleteRecipe(id);
+                                }}
+                            >
+                                Delete
+                            </button>
+                            }
+                        </li>
+                    );
+                })}
+            </ul>
+            <AddRecipeForm />
+        </div>
+    );
 }
 
 export default App;
